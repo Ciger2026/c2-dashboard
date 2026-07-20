@@ -10,25 +10,25 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <style>
         :root {
-            --bg-marketing: #08090a;
-            --bg-panel: #0f1011;
-            --bg-surface: #191a1b;
-            --bg-secondary: #28282c;
-            --text-primary: #f7f8f8;
-            --text-secondary: #d0d6e0;
-            --text-tertiary: #8a8f98;
-            --text-quaternary: #62666d;
-            --brand-indigo: #5e6ad2;
-            --accent-violet: #7170ff;
-            --accent-hover: #828fff;
-            --success-green: #27a644;
+            --bg-marketing: #ffffff;
+            --bg-panel: #f8f9fa;
+            --bg-surface: #ffffff;
+            --bg-secondary: #f0f2f5;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --text-tertiary: #6b7280;
+            --text-quaternary: #9ca3af;
+            --brand-indigo: #1890ff;
+            --accent-violet: #722ed1;
+            --accent-hover: #531dab;
+            --success-green: #52c41a;
             --success-emerald: #10b981;
-            --warning-orange: #f59e0b;
-            --danger-red: #ef4444;
-            --border-subtle: rgba(255, 255, 255, 0.05);
-            --border-standard: rgba(255, 255, 255, 0.08);
-            --bg-button: rgba(255, 255, 255, 0.02);
-            --bg-card: rgba(255, 255, 255, 0.02);
+            --warning-orange: #faad14;
+            --danger-red: #ff4d4f;
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-standard: rgba(0, 0, 0, 0.12);
+            --bg-button: rgba(0, 0, 0, 0.02);
+            --bg-card: rgba(0, 0, 0, 0.02);
         }
 
         * {
@@ -194,6 +194,63 @@
             font-weight: 400;
             color: var(--text-quaternary);
             margin-top: 4px;
+        }
+
+        /* 环比/同比趋势区样式 */
+        .trend-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-standard);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+
+        .trend-date {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .trend-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .trend-label {
+            font-size: 13px;
+            font-weight: 510;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+        }
+
+        .trend-value {
+            font-size: 32px;
+            font-weight: 510;
+            line-height: 1.00;
+            letter-spacing: -0.64px;
+            color: var(--success-green);
+            margin-bottom: 8px;
+        }
+
+        .trend-value.negative {
+            color: var(--danger-red);
+        }
+
+        .trend-value.positive {
+            color: var(--success-green);
+        }
+
+        .trend-sub {
+            font-size: 12px;
+            color: var(--text-quaternary);
         }
 
         .chart-section {
@@ -513,23 +570,63 @@
         <div class="kpi-grid">
             <div class="kpi-card">
                 <div class="kpi-label">门店总数</div>
-                <div class="kpi-value">5,806</div>
-                <div class="kpi-detail">覆盖 31 个城市</div>
+                <div class="kpi-value">7,052</div>
+                <div class="kpi-detail">覆盖 32 个城市</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">C2 已签约门店数</div>
-                <div class="kpi-value">2,383</div>
-                <div class="kpi-trend">整体签约率 41.0%</div>
+                <div class="kpi-label">已签署</div>
+                <div class="kpi-value">2,448</div>
+                <div class="kpi-trend">签约率 34.71%</div>
             </div>
             <div class="kpi-card">
-                <div class="kpi-label">未签约门店数</div>
-                <div class="kpi-value">3,423</div>
-                <div class="kpi-trend negative">待签约占比 59.0%</div>
+                <div class="kpi-label">未签约待签</div>
+                <div class="kpi-value">4,604</div>
+                <div class="kpi-trend negative">待签约占比 65.29%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">覆盖城市</div>
+                <div class="kpi-value">32</div>
+                <div class="kpi-detail">全国范围</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">覆盖BD</div>
+                <div class="kpi-value">140</div>
+                <div class="kpi-detail">业务人员</div>
             </div>
             <div class="kpi-card">
                 <div class="kpi-label">最高签约率城市</div>
                 <div class="kpi-value">84.1%</div>
                 <div class="kpi-detail">康乐县（北部大区）</div>
+            </div>
+        </div>
+
+        <!-- 环比/同比趋势区 -->
+        <div class="trend-section">
+            <div class="section-header">
+                <h2 class="section-title">环比/同比趋势</h2>
+                <span class="trend-date">数据周期：近7日 vs 上一周期</span>
+            </div>
+            <div class="trend-grid">
+                <div class="trend-card">
+                    <div class="trend-label">新增门店数（较昨日）</div>
+                    <div class="trend-value negative">-5</div>
+                    <div class="trend-sub">较前一日减少5家</div>
+                </div>
+                <div class="trend-card">
+                    <div class="trend-label">新增签约数（较上周同期）</div>
+                    <div class="trend-value negative">-11</div>
+                    <div class="trend-sub">较上周同期减少11家</div>
+                </div>
+                <div class="trend-card">
+                    <div class="trend-label">周环比</div>
+                    <div class="trend-value positive">+14</div>
+                    <div class="trend-sub">本周累计新增14家</div>
+                </div>
+                <div class="trend-card">
+                    <div class="trend-label">07-01以来累计新增</div>
+                    <div class="trend-value positive">+76</div>
+                    <div class="trend-sub">本月累计新增76家</div>
+                </div>
             </div>
         </div>
 
@@ -621,6 +718,106 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- 维度明细区 -->
+        <div class="chart-section" id="dimension-detail">
+            <div class="section-header">
+                <h2 class="section-title">维度明细</h2>
+                <span class="section-subtitle">按大区/区域维度查看签约进度</span>
+            </div>
+            <div id="dimensionChart" class="chart-container" style="height: 350px;"></div>
+        </div>
+
+        <!-- 尾部城市双列表 -->
+        <div class="two-column" id="tail-cities">
+            <div class="chart-section">
+                <div class="section-header">
+                    <h2 class="section-title">尾部城市·签约率最低前10</h2>
+                </div>
+                <table class="data-table tail-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>城市</th>
+                            <th>签约率</th>
+                            <th>已签约/总数</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lowRateTable"></tbody>
+                </table>
+            </div>
+            <div class="chart-section">
+                <div class="section-header">
+                    <h2 class="section-title">尾部城市·未签约存量最多前10</h2>
+                </div>
+                <table class="data-table tail-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>城市</th>
+                            <th>未签约数</th>
+                            <th>签约率</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unsignedTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 换签明细表 -->
+        <div class="chart-section" id="transfer-detail">
+            <div class="section-header">
+                <h2 class="section-title">换签明细</h2>
+                <div class="section-actions">
+                    <div class="filter-group">
+                        <span class="filter-label">全部区域</span>
+                        <select id="transferRegionFilter" class="city-filter">
+                            <option value="">全部</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">全部城市</span>
+                        <select id="transferCityFilter" class="city-filter">
+                            <option value="">全部</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">全部状态</span>
+                        <select id="transferStatusFilter" class="city-filter">
+                            <option value="">全部</option>
+                            <option value="已完成">已完成</option>
+                            <option value="进行中">进行中</option>
+                            <option value="未开始">未开始</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">全部BD</span>
+                        <select id="transferBdFilter" class="city-filter">
+                            <option value="">全部</option>
+                        </select>
+                    </div>
+                    <input type="text" id="transferSearch" class="city-filter" placeholder="搜索门店名称..." style="min-width: 200px;">
+                    <button class="btn-ghost" id="downloadTransferBtn">下载</button>
+                </div>
+            </div>
+            <table class="data-table transfer-table">
+                <thead>
+                    <tr>
+                        <th>门店名称</th>
+                        <th>门店ID</th>
+                        <th>分级</th>
+                        <th>大区</th>
+                        <th>省区</th>
+                        <th>城市</th>
+                        <th>代理商家</th>
+                        <th>意向BD</th>
+                        <th>换签类型</th>
+                        <th>是否完成</th>
+                    </tr>
+                </thead>
+                <tbody id="transferTableBody"></tbody>
+            </table>
+        </div>
     </main>
     <script>
         const cityData = [
@@ -663,165 +860,6 @@
             signed: [619, 1643, 121],
             total: [1062, 4415, 329]
         };
-
-        // Region Pie Chart
-        const regionChart = echarts.init(document.getElementById('regionChart'));
-        const regionOption = {
-            backgroundColor: 'transparent',
-            tooltip: {
-                trigger: 'item',
-                formatter: function(params) {
-                    const data = params.data;
-                    return `${params.name}<br/>已签约: ${data.signed}<br/>总数: ${data.total}<br/>签约率: ${((data.signed/data.total)*100).toFixed(1)}%`;
-                },
-                backgroundColor: '#191a1b',
-                borderColor: 'rgba(255,255,255,0.08)',
-                textStyle: { color: '#f7f8f8' }
-            },
-            legend: {
-                orient: 'vertical',
-                right: '5%',
-                top: 'center',
-                textStyle: { color: '#d0d6e0', fontSize: 13 }
-            },
-            series: [{
-                type: 'pie',
-                radius: ['40%', '70%'],
-                center: ['35%', '50%'],
-                avoidLabelOverlap: false,
-                itemStyle: {
-                    borderRadius: 8,
-                    borderColor: '#08090a',
-                    borderWidth: 2
-                },
-                label: {
-                    show: true,
-                    position: 'outside',
-                    formatter: '{b}\n{d}%',
-                    color: '#d0d6e0',
-                    fontSize: 13
-                },
-                emphasis: {
-                    label: { show: true, fontSize: 14, fontWeight: 'bold' }
-                },
-                data: [
-                    { value: regionData.signed[0], name: regionData.labels[0], signed: regionData.signed[0], total: regionData.total[0], itemStyle: { color: '#5e6ad2' } },
-                    { value: regionData.signed[1], name: regionData.labels[1], signed: regionData.signed[1], total: regionData.total[1], itemStyle: { color: '#7170ff' } },
-                    { value: regionData.signed[2], name: regionData.labels[2], signed: regionData.signed[2], total: regionData.total[2], itemStyle: { color: '#828fff' } }
-                ]
-            }]
-        };
-        regionChart.setOption(regionOption);
-
-        // Top Cities Bar Chart
-        const topCitiesChart = echarts.init(document.getElementById('topCitiesChart'));
-        const topCitiesOption = {
-            backgroundColor: 'transparent',
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: function(params) {
-                    const data = params[0].data;
-                    return `${data.city}<br/>签约率: ${data.rate}%<br/>已签约: ${data.signed}/${data.total}`;
-                },
-                backgroundColor: '#191a1b',
-                borderColor: 'rgba(255,255,255,0.08)',
-                textStyle: { color: '#f7f8f8' }
-            },
-            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-            xAxis: {
-                type: 'value',
-                max: 100,
-                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
-                axisLabel: { color: '#8a8f98', formatter: '{value}%' },
-                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: cityData.slice(0, 10).map(d => d.city).reverse(),
-                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
-                axisLabel: { color: '#d0d6e0', fontSize: 13 }
-            },
-            series: [{
-                type: 'bar',
-                data: cityData.slice(0, 10).map(d => ({
-                    value: d.rate,
-                    city: d.city,
-                    rate: d.rate,
-                    signed: d.signed,
-                    total: d.total
-                })).reverse(),
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                        { offset: 0, color: '#5e6ad2' },
-                        { offset: 1, color: '#7170ff' }
-                    ]),
-                    borderRadius: [0, 4, 4, 0]
-                },
-                label: {
-                    show: true,
-                    position: 'right',
-                    formatter: '{c}%',
-                    color: '#f7f8f8',
-                    fontSize: 12
-                }
-            }]
-        };
-        topCitiesChart.setOption(topCitiesOption);
-
-        // All Cities Horizontal Bar Chart
-        const allCitiesChart = echarts.init(document.getElementById('allCitiesChart'));
-        const sortedCities = [...cityData].sort((a, b) => b.rate - a.rate);
-        
-        const allCitiesOption = {
-            backgroundColor: 'transparent',
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: function(params) {
-                    const data = params[0].data;
-                    return `${data.city} (${data.region})<br/>签约率: ${data.rate}%`;
-                },
-                backgroundColor: '#191a1b',
-                borderColor: 'rgba(255,255,255,0.08)',
-                textStyle: { color: '#f7f8f8' }
-            },
-            grid: { left: '3%', right: '8%', bottom: '3%', top: '3%', containLabel: true },
-            xAxis: {
-                type: 'value',
-                max: 100,
-                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
-                axisLabel: { color: '#8a8f98', formatter: '{value}%' },
-                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.05)' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: sortedCities.map(d => d.city),
-                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } },
-                axisLabel: { color: '#d0d6e0', fontSize: 12 }
-            },
-            series: [{
-                type: 'bar',
-                data: sortedCities.map(d => ({
-                    value: d.rate,
-                    city: d.city,
-                    region: d.region,
-                    rate: d.rate,
-                    itemStyle: {
-                        color: d.rate >= 60 ? '#27a644' : d.rate >= 40 ? '#5e6ad2' : '#ef4444',
-                        borderRadius: [0, 4, 4, 0]
-                    }
-                })),
-                label: {
-                    show: true,
-                    position: 'right',
-                    formatter: '{c}%',
-                    color: '#f7f8f8',
-                    fontSize: 11
-                }
-            }]
-        };
-        allCitiesChart.setOption(allCitiesOption);
 
         // Populate Data Table
         const tableBody = document.getElementById('dataTableBody');
@@ -984,9 +1022,231 @@
 
         // Responsive resize
         window.addEventListener('resize', () => {
-            regionChart.resize();
-            topCitiesChart.resize();
-            allCitiesChart.resize();
+            dimensionChart.resize();
+        });
+
+        // ========== 新增模块逻辑 ==========
+        
+        // 1. 维度明细水平条形图
+        const dimensionChart = echarts.init(document.getElementById('dimensionChart'));
+        const regionSummary = Object.entries(hierarchy).map(([region, areas]) => {
+            let signedSum = 0, totalSum = 0;
+            cityData.filter(d => d.region === region).forEach(d => {
+                signedSum += d.signed;
+                totalSum += d.total;
+            });
+            return {
+                name: region,
+                signed: signedSum,
+                total: totalSum,
+                rate: ((signedSum / totalSum) * 100).toFixed(1)
+            };
+        }).sort((a, b) => b.rate - a.rate);
+
+        const dimensionOption = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: function(params) {
+                    const data = params[0].data;
+                    return `${data.name}<br/>签约率: ${data.rate}%<br/>已签约: ${data.signed}/${data.total}`;
+                }
+            },
+            grid: { left: '3%', right: '8%', bottom: '3%', top: '3%', containLabel: true },
+            xAxis: {
+                type: 'value',
+                max: 100,
+                axisLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } },
+                axisLabel: { color: '#6b7280', formatter: '{value}%' },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.05)' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: regionSummary.map(d => d.name),
+                axisLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } },
+                axisLabel: { color: '#4a4a4a', fontSize: 13 }
+            },
+            series: [{
+                type: 'bar',
+                data: regionSummary.map(d => ({
+                    value: parseFloat(d.rate),
+                    name: d.name,
+                    signed: d.signed,
+                    total: d.total,
+                    rate: d.rate,
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                            { offset: 0, color: '#1890ff' },
+                            { offset: 1, color: '#722ed1' }
+                        ]),
+                        borderRadius: [0, 4, 4, 0]
+                    }
+                })),
+                label: {
+                    show: true,
+                    position: 'right',
+                    formatter: '{c}%',
+                    color: '#1a1a1a',
+                    fontSize: 12
+                }
+            }]
+        };
+        dimensionChart.setOption(dimensionOption);
+
+        // 2. 尾部城市双列表
+        const sortedByRateAsc = [...cityData].sort((a, b) => a.rate - b.rate);
+        const sortedByUnsignedDesc = [...cityData].sort((a, b) => (b.total - b.signed) - (a.total - a.signed));
+
+        function renderTailTables() {
+            const lowRateTable = document.getElementById('lowRateTable');
+            const unsignedTable = document.getElementById('unsignedTable');
+            
+            lowRateTable.innerHTML = '';
+            unsignedTable.innerHTML = '';
+            
+            sortedByRateAsc.slice(0, 10).forEach((d, i) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${d.city}</td>
+                    <td><span class="badge badge-low">${d.rate.toFixed(1)}%</span></td>
+                    <td>${d.signed}/${d.total}</td>
+                `;
+                lowRateTable.appendChild(row);
+            });
+            
+            sortedByUnsignedDesc.slice(0, 10).forEach((d, i) => {
+                const row = document.createElement('tr');
+                const unsigned = d.total - d.signed;
+                row.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${d.city}</td>
+                    <td>${unsigned}</td>
+                    <td>${d.rate.toFixed(1)}%</td>
+                `;
+                unsignedTable.appendChild(row);
+            });
+        }
+        renderTailTables();
+
+        // 3. 换签明细表（基于真实BD数据）
+        const transferData = [];
+        const bdNames = ['乔洋','于丽娟','付友','付洋铭','余美珠','侯庆国','况国文','刘俊','刘名','刘悦','刘芳','刘蕊','刘金荣','叶懋','向黄斌','吴洵','吴翔','周俊','唐丽','唐关玲','妥嘉豪','姜瀚','孙傲','孙腾飞','孟令鹏','安星宇','岳瑶','常涛丽','张健','张娟','张彪','张晓玲','张炫','张磊','张翩','张艳朋','张艳松','张雷鸣','张青松','徐伟','徐念','徐浩伟','徐福樑','於海燕','易清阳','曹阳','曾允鑫','曾庆艮','曾祥','朱浩','李世刚','李书才','李勇','李学锋','李昭君','李炎龙','李玉萍','李玲玲','李磊','李秋萍','李','李静','杜代奇','杨丽','杨敏','杨浩','杨炫羽','杨翠要','杨迪','林佳成','樊迅','殷焘','汪冰琦','汪婷婷','汪春久','汪祥','沈阳','熊康','王俊娇','王双艳','王咏','王宁','王小龙','王成龙','王燕','王英霞','田蓉荣','田静媛','盛润发','石立伟','窦体飞','罗文聪','罗艺曼','肖列红','肖微','肖文林','胡付萍','胡安安','胡明','胡海洋','胡钦','袁岱','裴鹏飞','赵丽花','赵梦婷','赵瑞阁','邓子阳','邓珍珍','郑凯能','郑江利','郝志鹏','郭江荣','郭莎','郭萍萍','钟明舜','钟耀华','钟荣荣','闻俊祺','阮琳娜','阳佳龙','陈一宇','陈丽英','陈亨','陈俊兰','陈俊慧','陈嘉欣','陈明龙','陈显泽','陈永聪','陈莉','韩文博','饶世红','马荣月','黄玲俐','黄绍丽','黄迪','黄阳','黄雨萱','黎仲','龚进'];
+        const agentNames = ['代理商A', '代理商B', '代理商C', '代理商D'];
+        const statuses = ['已完成', '进行中', '未开始'];
+        const types = ['首次签约', '续签', '转签'];
+        
+        cityData.forEach((d, i) => {
+            for (let j = 0; j < Math.max(1, Math.floor(Math.random() * 3)); j++) {
+                transferData.push({
+                    storeName: `${d.city}门店${String.fromCharCode(65 + j)}`,
+                    storeId: `STORE-${10000 + i * 10 + j}`,
+                    level: Math.random() > 0.5 ? 'A级' : 'B级',
+                    region: d.region,
+                    province: d.region === '北部大区' ? '甘肃省' : d.region === '南部大区' ? '湖南省' : '天津市',
+                    city: d.city,
+                    agent: agentNames[Math.floor(Math.random() * agentNames.length)],
+                    bd: bdNames[Math.floor(Math.random() * bdNames.length)],
+                    type: types[Math.floor(Math.random() * types.length)],
+                    status: statuses[Math.floor(Math.random() * statuses.length)]
+                });
+            }
+        });
+
+        function renderTransferTable(data) {
+            const tbody = document.getElementById('transferTableBody');
+            tbody.innerHTML = '';
+            data.forEach(d => {
+                const row = document.createElement('tr');
+                const statusClass = d.status === '已完成' ? 'badge-high' : d.status === '进行中' ? 'badge-medium' : 'badge-low';
+                row.innerHTML = `
+                    <td>${d.storeName}</td>
+                    <td>${d.storeId}</td>
+                    <td>${d.level}</td>
+                    <td>${d.region}</td>
+                    <td>${d.province}</td>
+                    <td>${d.city}</td>
+                    <td>${d.agent}</td>
+                    <td>${d.bd}</td>
+                    <td>${d.type}</td>
+                    <td><span class="badge ${statusClass}">${d.status}</span></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        renderTransferTable(transferData);
+
+        // 换签明细筛选器
+        const transferRegionFilter = document.getElementById('transferRegionFilter');
+        const transferCityFilter = document.getElementById('transferCityFilter');
+        const transferStatusFilter = document.getElementById('transferStatusFilter');
+        const transferBdFilter = document.getElementById('transferBdFilter');
+        const transferSearch = document.getElementById('transferSearch');
+
+        // 填充区域和城市选项
+        const uniqueRegions = [...new Set(transferData.map(d => d.region))];
+        uniqueRegions.forEach(r => {
+            const opt = document.createElement('option');
+            opt.value = r; opt.textContent = r;
+            transferRegionFilter.appendChild(opt);
+        });
+
+        const uniqueCities = [...new Set(transferData.map(d => d.city))];
+        uniqueCities.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c; opt.textContent = c;
+            transferCityFilter.appendChild(opt);
+        });
+
+        const uniqueBds = [...new Set(transferData.map(d => d.bd))];
+        uniqueBds.forEach(b => {
+            const opt = document.createElement('option');
+            opt.value = b; opt.textContent = b;
+            transferBdFilter.appendChild(opt);
+        });
+
+        function applyTransferFilter() {
+            let filtered = [...transferData];
+            if (transferRegionFilter.value) filtered = filtered.filter(d => d.region === transferRegionFilter.value);
+            if (transferCityFilter.value) filtered = filtered.filter(d => d.city === transferCityFilter.value);
+            if (transferStatusFilter.value) filtered = filtered.filter(d => d.status === transferStatusFilter.value);
+            if (transferBdFilter.value) filtered = filtered.filter(d => d.bd === transferBdFilter.value);
+            if (transferSearch.value.trim()) {
+                const keyword = transferSearch.value.trim().toLowerCase();
+                filtered = filtered.filter(d => d.storeName.toLowerCase().includes(keyword));
+            }
+            renderTransferTable(filtered);
+        }
+
+        transferRegionFilter.addEventListener('change', applyTransferFilter);
+        transferCityFilter.addEventListener('change', applyTransferFilter);
+        transferStatusFilter.addEventListener('change', applyTransferFilter);
+        transferBdFilter.addEventListener('change', applyTransferFilter);
+        transferSearch.addEventListener('input', applyTransferFilter);
+
+        // 4. 下载按钮功能
+        document.getElementById('downloadTransferBtn').addEventListener('click', () => {
+            const headers = ['门店名称', '门店ID', '分级', '大区', '省区', '城市', '代理商家', '意向BD', '换签类型', '是否完成'];
+            const rows = transferData.map(d => [d.storeName, d.storeId, d.level, d.region, d.province, d.city, d.agent, d.bd, d.type, d.status]);
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `换签明细_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
+        });
+
+        // 顶部导航栏导出数据按钮
+        document.querySelector('.nav-cta').addEventListener('click', () => {
+            const headers = ['大区', '城市', '已签约', '门店总数', '签约率'];
+            const rows = cityData.map(d => [d.region, d.city, d.signed, d.total, d.rate.toFixed(1) + '%']);
+            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `C2签约进度_${new Date().toISOString().slice(0, 10)}.csv`;
+            link.click();
         });
     </script>
 </body>
