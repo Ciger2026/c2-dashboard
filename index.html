@@ -465,20 +465,26 @@
             background-color: rgba(255, 255, 255, 0.02);
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background-color: var(--bg-surface);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 4px;
+        /* 日期趋势表紧凑样式 */
+        .trend-table th,
+        .trend-table td {
+            padding: 8px 10px;
+            font-size: 13px;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--brand-indigo), var(--accent-violet));
-            border-radius: 3px;
-            transition: width 0.3s ease;
+        .trend-table tbody tr:nth-child(even) {
+            background-color: var(--bg-secondary);
+        }
+
+        /* 正负值颜色 */
+        .positive {
+            color: var(--success-green);
+            font-weight: 510;
+        }
+
+        .negative {
+            color: var(--danger-red);
+            font-weight: 510;
         }
 
         .badge {
@@ -555,8 +561,8 @@
         </div>
         <div class="nav-links">
             <a href="#overview" class="nav-link">总览</a>
-            <a href="#region-analysis" class="nav-link">大区分析</a>
-            <a href="#city-ranking" class="nav-link">城市排名</a>
+            <a href="#date-trend" class="nav-link">日期趋势</a>
+            <a href="#dimension-detail" class="nav-link">维度明细</a>
             <button class="nav-cta">导出数据</button>
         </div>
     </nav>
@@ -630,92 +636,50 @@
             </div>
         </div>
 
-        <div class="chart-section" id="data-insights">
+        <!-- 日期趋势主表 -->
+        <div class="chart-section" id="date-trend">
             <div class="section-header">
-                <h2 class="section-title">数据分析洞察</h2>
-            </div>
-            <div class="insights-content">
-                <div class="insight-item">
-                    <span class="insight-icon">📊</span>
-                    <p><strong>整体签约进度：</strong>C2 合同整体签约率为 <strong>41.0%</strong>，已签约 2,383 家门店，仍有 3,423 家门店待签约。签约推进空间较大，需重点关注低签约率城市的突破。</p>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-icon"></span>
-                    <p><strong>头部城市表现：</strong>康乐县以 <strong>84.1%</strong> 的签约率领跑全国，嘉峪关（74.9%）、静宁县（69.6%）紧随其后。北部大区整体表现优于南部大区，建议总结高签约率城市的成功经验并复制推广。</p>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-icon">⚠️</span>
-                    <p><strong>待提升区域：</strong>泸西县（10.7%）、通城（13.7%）、景东县（15.3%）签约率低于 20%，存在显著差距。建议针对这些城市开展专项调研，识别阻碍签约的核心因素并制定针对性策略。</p>
-                </div>
-                <div class="insight-item">
-                    <span class="insight-icon"></span>
-                    <p><strong>优先级建议：</strong>优先攻坚签约率在 20%-40% 区间的中部城市（如天门、大冶市、丹江口市等），这类城市具备一定基础但尚未形成规模效应，投入产出比相对较高。</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="two-column" id="region-analysis">
-            <div class="chart-section">
-                <div class="section-header">
-                    <h2 class="section-title">大区签约占比分布</h2>
-                </div>
-                <div id="regionChart" class="chart-container"></div>
-            </div>
-            <div class="chart-section">
-                <div class="section-header">
-                    <h2 class="section-title">城市签约率 TOP 10</h2>
-                </div>
-                <div id="topCitiesChart" class="chart-container"></div>
-            </div>
-        </div>
-
-        <div class="chart-section" id="city-ranking">
-            <div class="section-header">
-                <h2 class="section-title">各城市签约率详细对比</h2>
-            </div>
-            <div id="allCitiesChart" class="chart-container" style="height: 500px;"></div>
-        </div>
-
-        <div class="chart-section">
-            <div class="section-header">
-                <h2 class="section-title">区域签约详情</h2>
+                <h2 class="section-title">日期趋势</h2>
                 <div class="section-actions">
                     <div class="filter-group">
-                        <span class="filter-label">大区</span>
-                        <select id="regionFilter" class="city-filter">
-                            <option value="">全部</option>
+                        <span class="filter-label">维度</span>
+                        <select id="trendDimensionFilter" class="city-filter">
+                            <option value="overall">总体-项目</option>
+                            <option value="region">区域</option>
+                            <option value="city">城市</option>
                         </select>
                     </div>
                     <div class="filter-group">
-                        <span class="filter-label">区域</span>
-                        <select id="areaFilter" class="city-filter" disabled>
+                        <span class="filter-label">省区</span>
+                        <select id="trendProvinceFilter" class="city-filter">
                             <option value="">全部</option>
                         </select>
                     </div>
                     <div class="filter-group">
                         <span class="filter-label">城市</span>
-                        <select id="cityFilter" class="city-filter">
+                        <select id="trendCityFilter" class="city-filter">
                             <option value="">全部</option>
                         </select>
                     </div>
-                    <button class="btn-ghost" id="sortByRate">按签约率排序</button>
-                    <button class="btn-ghost" id="sortByStore">按门店数排序</button>
                 </div>
             </div>
-            <table class="data-table">
+            <table class="data-table trend-table">
                 <thead>
                     <tr>
-                        <th>大区</th>
-                        <th>区域</th>
-                        <th>代理城市</th>
-                        <th>已签约</th>
-                        <th>门店总数</th>
+                        <th>日期</th>
+                        <th>门店数</th>
+                        <th>累计签约</th>
                         <th>签约率</th>
-                        <th>评级</th>
+                        <th>日增门店</th>
+                        <th>日增签约</th>
+                        <th>周增门店</th>
+                        <th>周增签约</th>
+                        <th>月增门店</th>
+                        <th>月增签约</th>
+                        <th>季度签约率%</th>
                     </tr>
                 </thead>
-                <tbody id="dataTableBody">
-                </tbody>
+                <tbody id="trendTableBody"></tbody>
             </table>
         </div>
 
@@ -820,6 +784,7 @@
         </div>
     </main>
     <script>
+        // ========== 基础数据 ==========
         const cityData = [
             { city: '康乐县', region: '北部大区', rate: 84.1, signed: 58, total: 69 },
             { city: '嘉峪关', region: '北部大区', rate: 74.9, signed: 328, total: 438 },
@@ -855,293 +820,129 @@
             { city: '怀宁县', region: '北部大区', rate: 14.3, signed: 32, total: 223 }
         ];
 
-        const regionData = {
-            labels: ['北部大区', '南部大区', '特区'],
-            signed: [619, 1643, 121],
-            total: [1062, 4415, 329]
-        };
+        // ========== 日期趋势数据（模拟） ==========
+        const trendData = [
+            { date: '2026-07-16', stores: 7052, cumulativeSigned: 2448, rate: 34.71, dailyStores: -5, dailySigned: -11, weeklyStores: +14, weeklySigned: +19, monthlyStores: +76, monthlySigned: +88, quarterlyRate: 34.71 },
+            { date: '2026-07-15', stores: 7057, cumulativeSigned: 2459, rate: 34.85, dailyStores: +3, dailySigned: +8, weeklyStores: +12, weeklySigned: +22, monthlyStores: +71, monthlySigned: +77, quarterlyRate: 34.85 },
+            { date: '2026-07-14', stores: 7054, cumulativeSigned: 2451, rate: 34.74, dailyStores: +2, dailySigned: +5, weeklyStores: +9, weeklySigned: +14, monthlyStores: +68, monthlySigned: +69, quarterlyRate: 34.74 },
+            { date: '2026-07-13', stores: 7052, cumulativeSigned: 2446, rate: 34.68, dailyStores: +1, dailySigned: +3, weeklyStores: +7, weeklySigned: +9, monthlyStores: +66, monthlySigned: +64, quarterlyRate: 34.68 },
+            { date: '2026-07-12', stores: 7051, cumulativeSigned: 2443, rate: 34.65, dailyStores: +3, dailySigned: +11, weeklyStores: +6, weeklySigned: +6, monthlyStores: +65, monthlySigned: +61, quarterlyRate: 34.65 },
+            { date: '2026-07-11', stores: 7048, cumulativeSigned: 2432, rate: 34.51, dailyStores: +5, dailySigned: +15, weeklyStores: +3, weeklySigned: -5, monthlyStores: +62, monthlySigned: +50, quarterlyRate: 34.51 },
+            { date: '2026-07-10', stores: 7043, cumulativeSigned: 2417, rate: 34.32, dailyStores: +6, dailySigned: +1, weeklyStores: -2, weeklySigned: -22, monthlyStores: +57, monthlySigned: +35, quarterlyRate: 34.32 },
+            { date: '2026-07-09', stores: 7037, cumulativeSigned: 2416, rate: 34.33, dailyStores: +4, dailySigned: +8, weeklyStores: -3, weeklySigned: -10, monthlyStores: +51, monthlySigned: +34, quarterlyRate: 34.33 },
+            { date: '2026-07-08', stores: 7033, cumulativeSigned: 2408, rate: 34.24, dailyStores: +3, dailySigned: +4, weeklyStores: -1, weeklySigned: -9, monthlyStores: +47, monthlySigned: +26, quarterlyRate: 34.24 },
+            { date: '2026-07-07', stores: 7030, cumulativeSigned: 2404, rate: 34.20, dailyStores: +3, dailySigned: +1, weeklyStores: +1, weeklySigned: -7, monthlyStores: +44, monthlySigned: +22, quarterlyRate: 34.20 },
+            { date: '2026-07-06', stores: 7027, cumulativeSigned: 2403, rate: 34.19, dailyStores: +3, dailySigned: +1, weeklyStores: +2, weeklySigned: -14, monthlyStores: +41, monthlySigned: +21, quarterlyRate: 34.19 },
+            { date: '2026-07-05', stores: 7024, cumulativeSigned: 2402, rate: 34.19, dailyStores: +4, dailySigned: +4, weeklyStores: -18, weeklySigned: -18, monthlyStores: +38, monthlySigned: +20, quarterlyRate: 34.19 }
+        ];
 
-        // Populate Data Table
-        const tableBody = document.getElementById('dataTableBody');
-        let currentSortData = [...cityData].sort((a, b) => b.rate - a.rate);
-        
-        function renderTable(data) {
-            tableBody.innerHTML = '';
-            data.forEach(city => {
+        // ========== BD真实姓名列表 ==========
+        const bdNames = ['乔洋','于丽娟','付友','付洋铭','余美珠','侯庆国','况国文','刘俊','刘名','刘悦','刘芳','刘蕊','刘金荣','叶懋','向黄斌','吴洵','吴翔','周俊','唐丽','唐关玲','妥嘉豪','姜瀚','孙傲','孙腾飞','孟令鹏','安星宇','岳瑶','常涛丽','张健','张娟','张彪','张晓玲','张炫','张磊','张翩','张艳朋','张艳松','张雷鸣','张青松','徐伟','徐念','徐浩伟','徐福樑','於海燕','易清阳','曹阳','曾允鑫','曾庆艮','曾祥','朱浩','李世刚','李书才','李勇','李学锋','李昭君','李炎龙','李玉萍','李玲玲','李磊','李秋萍','李','李静','杜代奇','杨丽','杨敏','杨浩','杨炫羽','杨翠要','杨迪','林佳成','樊迅','殷焘','汪冰琦','汪婷婷','汪春久','汪祥','沈阳','熊康','王俊娇','王双艳','王咏','王宁','王小龙','王成龙','王燕','王英霞','田蓉荣','田静媛','盛润发','石立伟','窦体飞','罗文聪','罗艺曼','肖列红','肖微','肖文林','胡付萍','胡安安','胡明','胡海洋','胡钦','袁岱','裴鹏飞','赵丽花','赵梦婷','赵瑞阁','邓子阳','邓珍珍','郑凯能','郑江利','郝志鹏','郭江荣','郭莎','郭萍萍','钟明舜','钟耀华','钟荣荣','闻俊祺','阮琳娜','阳佳龙','陈一宇','陈丽英','陈亨','陈俊兰','陈俊慧','陈嘉欣','陈明龙','陈显泽','陈永聪','陈莉','韩文博','饶世红','马荣月','黄玲俐','黄绍丽','黄迪','黄阳','黄雨萱','黎仲','龚进'];
+
+        // ========== 渲染日期趋势表 ==========
+        function renderTrendTable() {
+            const tbody = document.getElementById('trendTableBody');
+            tbody.innerHTML = '';
+            trendData.forEach(d => {
                 const row = document.createElement('tr');
-                let badgeClass = 'badge-low';
-                let badgeText = '待提升';
-                
-                if (city.rate >= 60) {
-                    badgeClass = 'badge-high';
-                    badgeText = '优秀';
-                } else if (city.rate >= 40) {
-                    badgeClass = 'badge-medium';
-                    badgeText = '良好';
-                }
-                
+                const rateClass = d.rate >= 34.5 ? '' : d.rate >= 34.2 ? '' : 'negative';
                 row.innerHTML = `
-                    <td>${city.region}</td>
-                    <td>-</td>
-                    <td>${city.city}</td>
-                    <td>${city.signed}</td>
-                    <td>${city.total}</td>
-                    <td>
-                        ${city.rate.toFixed(1)}%
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${city.rate}%"></div>
-                        </div>
-                    </td>
-                    <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                    <td>${d.date}</td>
+                    <td>${d.stores.toLocaleString()}</td>
+                    <td>${d.cumulativeSigned.toLocaleString()}</td>
+                    <td class="${rateClass}">${d.rate.toFixed(2)}%</td>
+                    <td class="${d.dailyStores >= 0 ? 'positive' : 'negative'}">${d.dailyStores > 0 ? '+' : ''}${d.dailyStores}</td>
+                    <td class="${d.dailySigned >= 0 ? 'positive' : 'negative'}">${d.dailySigned > 0 ? '+' : ''}${d.dailySigned}</td>
+                    <td class="${d.weeklyStores >= 0 ? 'positive' : 'negative'}">${d.weeklyStores > 0 ? '+' : ''}${d.weeklyStores}</td>
+                    <td class="${d.weeklySigned >= 0 ? 'positive' : 'negative'}">${d.weeklySigned > 0 ? '+' : ''}${d.weeklySigned}</td>
+                    <td class="${d.monthlyStores >= 0 ? 'positive' : 'negative'}">${d.monthlyStores > 0 ? '+' : ''}${d.monthlyStores}</td>
+                    <td class="${d.monthlySigned >= 0 ? 'positive' : 'negative'}">${d.monthlySigned > 0 ? '+' : ''}${d.monthlySigned}</td>
+                    <td>${d.quarterlyRate.toFixed(2)}%</td>
                 `;
-                tableBody.appendChild(row);
+                tbody.appendChild(row);
             });
         }
-        
-        // Initial render
-        renderTable(currentSortData);
-        
-        // Build hierarchical data structure: region -> area -> cities
-        const hierarchy = {};
-        cityData.forEach(d => {
-            if (!hierarchy[d.region]) hierarchy[d.region] = {};
-            const areaKey = d.area || '默认区域';
-            if (!hierarchy[d.region][areaKey]) hierarchy[d.region][areaKey] = [];
-            if (!hierarchy[d.region][areaKey].includes(d.city)) {
-                hierarchy[d.region][areaKey].push(d.city);
-            }
-        });
-        
-        // Populate region filter
-        const regionFilter = document.getElementById('regionFilter');
-        const regions = Object.keys(hierarchy).sort();
-        regions.forEach(region => {
-            const option = document.createElement('option');
-            option.value = region;
-            option.textContent = region;
-            regionFilter.appendChild(option);
-        });
-        
-        const areaFilter = document.getElementById('areaFilter');
-        const cityFilter = document.getElementById('cityFilter');
-        
-        // Update area options when region changes
-        function updateAreaOptions() {
-            const selectedRegion = regionFilter.value;
-            areaFilter.innerHTML = '<option value="">全部区域</option>';
-            cityFilter.innerHTML = '<option value="">全部城市</option>';
-            cityFilter.disabled = true;
-            
-            if (selectedRegion && hierarchy[selectedRegion]) {
-                areaFilter.disabled = false;
-                const areas = Object.keys(hierarchy[selectedRegion]).sort();
-                areas.forEach(area => {
-                    const option = document.createElement('option');
-                    option.value = area;
-                    option.textContent = area;
-                    areaFilter.appendChild(option);
-                });
-            } else {
-                areaFilter.disabled = true;
-            }
-        }
-        
-        // Update city options when area changes
-        function updateCityOptions() {
-            const selectedRegion = regionFilter.value;
-            const selectedArea = areaFilter.value;
-            cityFilter.innerHTML = '';
-            
-            if (selectedRegion && selectedArea && hierarchy[selectedRegion][selectedArea]) {
-                cityFilter.disabled = false;
-                const cities = hierarchy[selectedRegion][selectedArea].sort();
-                cities.forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    cityFilter.appendChild(option);
-                });
-            } else {
-                cityFilter.disabled = true;
-            }
-        }
-        
-        regionFilter.addEventListener('change', () => {
-            updateAreaOptions();
-            applyFilter();
-        });
-        
-        areaFilter.addEventListener('change', () => {
-            updateCityOptions();
-            applyFilter();
-        });
-        
-        // Filter and render table based on selected region, area, and city
-        function applyFilter() {
-            const selectedRegion = regionFilter.value;
-            const selectedArea = areaFilter.value;
-            const selectedCity = cityFilter.value;
-            
-            let filteredData = [...cityData];
-            
-            if (selectedRegion) {
-                filteredData = filteredData.filter(d => d.region === selectedRegion);
-            }
-            if (selectedArea) {
-                filteredData = filteredData.filter(d => (d.area || '默认区域') === selectedArea);
-            }
-            if (selectedCity) {
-                filteredData = filteredData.filter(d => d.city === selectedCity);
-            }
-            
-            // Apply current sort
-            if (currentSortBy === 'rate') {
-                filteredData.sort((a, b) => b.rate - a.rate);
-            } else if (currentSortBy === 'store') {
-                filteredData.sort((a, b) => b.total - a.total);
-            }
-            
-            renderTable(filteredData);
-        }
-        
-        let currentSortBy = 'rate';
-        
-        cityFilter.addEventListener('change', applyFilter);
-        
-        // Sort by rate button
-        document.getElementById('sortByRate').addEventListener('click', () => {
-            currentSortBy = 'rate';
-            applyFilter();
-        });
-        
-        // Sort by store count button
-        document.getElementById('sortByStore').addEventListener('click', () => {
-            currentSortBy = 'store';
-            applyFilter();
-        });
+        renderTrendTable();
 
-        // Responsive resize
-        window.addEventListener('resize', () => {
-            dimensionChart.resize();
-        });
-
-        // ========== 新增模块逻辑 ==========
-        
-        // 1. 维度明细水平条形图
+        // ========== 维度明细水平条形图 ==========
         const dimensionChart = echarts.init(document.getElementById('dimensionChart'));
-        const regionSummary = Object.entries(hierarchy).map(([region, areas]) => {
-            let signedSum = 0, totalSum = 0;
-            cityData.filter(d => d.region === region).forEach(d => {
-                signedSum += d.signed;
-                totalSum += d.total;
+        const regionSummary = (() => {
+            const map = {};
+            cityData.forEach(d => {
+                if (!map[d.region]) map[d.region] = { signed: 0, total: 0 };
+                map[d.region].signed += d.signed;
+                map[d.region].total += d.total;
             });
-            return {
-                name: region,
-                signed: signedSum,
-                total: totalSum,
-                rate: ((signedSum / totalSum) * 100).toFixed(1)
-            };
-        }).sort((a, b) => b.rate - a.rate);
+            return Object.entries(map).map(([name, v]) => ({
+                name, signed: v.signed, total: v.total,
+                rate: ((v.signed / v.total) * 100).toFixed(1)
+            })).sort((a, b) => b.rate - a.rate);
+        })();
 
         const dimensionOption = {
             backgroundColor: 'transparent',
             tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: function(params) {
-                    const data = params[0].data;
-                    return `${data.name}<br/>签约率: ${data.rate}%<br/>已签约: ${data.signed}/${data.total}`;
-                }
+                trigger: 'axis', axisPointer: { type: 'shadow' },
+                formatter: p => `${p[0].data.name}<br/>签约率: ${p[0].data.rate}%<br/>已签约: ${p[0].data.signed}/${p[0].data.total}`
             },
             grid: { left: '3%', right: '8%', bottom: '3%', top: '3%', containLabel: true },
             xAxis: {
-                type: 'value',
-                max: 100,
+                type: 'value', max: 100,
                 axisLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } },
                 axisLabel: { color: '#6b7280', formatter: '{value}%' },
                 splitLine: { lineStyle: { color: 'rgba(0,0,0,0.05)' } }
             },
             yAxis: {
-                type: 'category',
-                data: regionSummary.map(d => d.name),
+                type: 'category', data: regionSummary.map(d => d.name),
                 axisLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } },
                 axisLabel: { color: '#4a4a4a', fontSize: 13 }
             },
             series: [{
                 type: 'bar',
                 data: regionSummary.map(d => ({
-                    value: parseFloat(d.rate),
-                    name: d.name,
-                    signed: d.signed,
-                    total: d.total,
-                    rate: d.rate,
+                    value: parseFloat(d.rate), name: d.name, signed: d.signed, total: d.total, rate: d.rate,
                     itemStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
-                            { offset: 0, color: '#1890ff' },
-                            { offset: 1, color: '#722ed1' }
-                        ]),
-                        borderRadius: [0, 4, 4, 0]
+                            { offset: 0, color: '#1890ff' }, { offset: 1, color: '#722ed1' }
+                        ]), borderRadius: [0, 4, 4, 0]
                     }
                 })),
-                label: {
-                    show: true,
-                    position: 'right',
-                    formatter: '{c}%',
-                    color: '#1a1a1a',
-                    fontSize: 12
-                }
+                label: { show: true, position: 'right', formatter: '{c}%', color: '#1a1a1a', fontSize: 12 }
             }]
         };
         dimensionChart.setOption(dimensionOption);
 
-        // 2. 尾部城市双列表
-        const sortedByRateAsc = [...cityData].sort((a, b) => a.rate - b.rate);
-        const sortedByUnsignedDesc = [...cityData].sort((a, b) => (b.total - b.signed) - (a.total - a.signed));
-
+        // ========== 尾部城市双列表 ==========
         function renderTailTables() {
+            const sortedByRateAsc = [...cityData].sort((a, b) => a.rate - b.rate);
+            const sortedByUnsignedDesc = [...cityData].sort((a, b) => (b.total - b.signed) - (a.total - a.signed));
             const lowRateTable = document.getElementById('lowRateTable');
             const unsignedTable = document.getElementById('unsignedTable');
-            
             lowRateTable.innerHTML = '';
             unsignedTable.innerHTML = '';
-            
             sortedByRateAsc.slice(0, 10).forEach((d, i) => {
                 const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${i + 1}</td>
-                    <td>${d.city}</td>
-                    <td><span class="badge badge-low">${d.rate.toFixed(1)}%</span></td>
-                    <td>${d.signed}/${d.total}</td>
-                `;
+                row.innerHTML = `<td>${i+1}</td><td>${d.city}</td><td><span class="badge badge-low">${d.rate.toFixed(1)}%</span></td><td>${d.signed}/${d.total}</td>`;
                 lowRateTable.appendChild(row);
             });
-            
             sortedByUnsignedDesc.slice(0, 10).forEach((d, i) => {
                 const row = document.createElement('tr');
-                const unsigned = d.total - d.signed;
-                row.innerHTML = `
-                    <td>${i + 1}</td>
-                    <td>${d.city}</td>
-                    <td>${unsigned}</td>
-                    <td>${d.rate.toFixed(1)}%</td>
-                `;
+                row.innerHTML = `<td>${i+1}</td><td>${d.city}</td><td>${d.total - d.signed}</td><td>${d.rate.toFixed(1)}%</td>`;
                 unsignedTable.appendChild(row);
             });
         }
         renderTailTables();
 
-        // 3. 换签明细表（基于真实BD数据）
+        // ========== 换签明细表 ==========
         const transferData = [];
-        const bdNames = ['乔洋','于丽娟','付友','付洋铭','余美珠','侯庆国','况国文','刘俊','刘名','刘悦','刘芳','刘蕊','刘金荣','叶懋','向黄斌','吴洵','吴翔','周俊','唐丽','唐关玲','妥嘉豪','姜瀚','孙傲','孙腾飞','孟令鹏','安星宇','岳瑶','常涛丽','张健','张娟','张彪','张晓玲','张炫','张磊','张翩','张艳朋','张艳松','张雷鸣','张青松','徐伟','徐念','徐浩伟','徐福樑','於海燕','易清阳','曹阳','曾允鑫','曾庆艮','曾祥','朱浩','李世刚','李书才','李勇','李学锋','李昭君','李炎龙','李玉萍','李玲玲','李磊','李秋萍','李','李静','杜代奇','杨丽','杨敏','杨浩','杨炫羽','杨翠要','杨迪','林佳成','樊迅','殷焘','汪冰琦','汪婷婷','汪春久','汪祥','沈阳','熊康','王俊娇','王双艳','王咏','王宁','王小龙','王成龙','王燕','王英霞','田蓉荣','田静媛','盛润发','石立伟','窦体飞','罗文聪','罗艺曼','肖列红','肖微','肖文林','胡付萍','胡安安','胡明','胡海洋','胡钦','袁岱','裴鹏飞','赵丽花','赵梦婷','赵瑞阁','邓子阳','邓珍珍','郑凯能','郑江利','郝志鹏','郭江荣','郭莎','郭萍萍','钟明舜','钟耀华','钟荣荣','闻俊祺','阮琳娜','阳佳龙','陈一宇','陈丽英','陈亨','陈俊兰','陈俊慧','陈嘉欣','陈明龙','陈显泽','陈永聪','陈莉','韩文博','饶世红','马荣月','黄玲俐','黄绍丽','黄迪','黄阳','黄雨萱','黎仲','龚进'];
         const agentNames = ['代理商A', '代理商B', '代理商C', '代理商D'];
         const statuses = ['已完成', '进行中', '未开始'];
         const types = ['首次签约', '续签', '转签'];
-        
         cityData.forEach((d, i) => {
             for (let j = 0; j < Math.max(1, Math.floor(Math.random() * 3)); j++) {
                 transferData.push({
-                    storeName: `${d.city}门店${String.fromCharCode(65 + j)}`,
-                    storeId: `STORE-${10000 + i * 10 + j}`,
+                    storeName: `${d.city}门店${String.fromCharCode(65+j)}`,
+                    storeId: `STORE-${10000+i*10+j}`,
                     level: Math.random() > 0.5 ? 'A级' : 'B级',
                     region: d.region,
                     province: d.region === '北部大区' ? '甘肃省' : d.region === '南部大区' ? '湖南省' : '天津市',
@@ -1159,95 +960,62 @@
             tbody.innerHTML = '';
             data.forEach(d => {
                 const row = document.createElement('tr');
-                const statusClass = d.status === '已完成' ? 'badge-high' : d.status === '进行中' ? 'badge-medium' : 'badge-low';
-                row.innerHTML = `
-                    <td>${d.storeName}</td>
-                    <td>${d.storeId}</td>
-                    <td>${d.level}</td>
-                    <td>${d.region}</td>
-                    <td>${d.province}</td>
-                    <td>${d.city}</td>
-                    <td>${d.agent}</td>
-                    <td>${d.bd}</td>
-                    <td>${d.type}</td>
-                    <td><span class="badge ${statusClass}">${d.status}</span></td>
-                `;
+                const sc = d.status === '已完成' ? 'badge-high' : d.status === '进行中' ? 'badge-medium' : 'badge-low';
+                row.innerHTML = `<td>${d.storeName}</td><td>${d.storeId}</td><td>${d.level}</td><td>${d.region}</td><td>${d.province}</td><td>${d.city}</td><td>${d.agent}</td><td>${d.bd}</td><td>${d.type}</td><td><span class="badge ${sc}">${d.status}</span></td>`;
                 tbody.appendChild(row);
             });
         }
         renderTransferTable(transferData);
 
         // 换签明细筛选器
-        const transferRegionFilter = document.getElementById('transferRegionFilter');
-        const transferCityFilter = document.getElementById('transferCityFilter');
-        const transferStatusFilter = document.getElementById('transferStatusFilter');
-        const transferBdFilter = document.getElementById('transferBdFilter');
-        const transferSearch = document.getElementById('transferSearch');
-
-        // 填充区域和城市选项
-        const uniqueRegions = [...new Set(transferData.map(d => d.region))];
-        uniqueRegions.forEach(r => {
-            const opt = document.createElement('option');
-            opt.value = r; opt.textContent = r;
-            transferRegionFilter.appendChild(opt);
-        });
-
-        const uniqueCities = [...new Set(transferData.map(d => d.city))];
-        uniqueCities.forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c; opt.textContent = c;
-            transferCityFilter.appendChild(opt);
-        });
-
-        const uniqueBds = [...new Set(transferData.map(d => d.bd))];
-        uniqueBds.forEach(b => {
-            const opt = document.createElement('option');
-            opt.value = b; opt.textContent = b;
-            transferBdFilter.appendChild(opt);
+        ['transferRegionFilter', 'transferCityFilter', 'transferStatusFilter', 'transferBdFilter'].forEach(id => {
+            const sel = document.getElementById(id);
+            if (!sel) return;
+            const source = id === 'transferRegionFilter' ? [...new Set(transferData.map(d=>d.region))]
+                       : id === 'transferCityFilter' ? [...new Set(transferData.map(d=>d.city))]
+                       : id === 'transferBdFilter' ? [...new Set(transferData.map(d=>d.bd))] : null;
+            if (source) source.forEach(v => { const o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
         });
 
         function applyTransferFilter() {
-            let filtered = [...transferData];
-            if (transferRegionFilter.value) filtered = filtered.filter(d => d.region === transferRegionFilter.value);
-            if (transferCityFilter.value) filtered = filtered.filter(d => d.city === transferCityFilter.value);
-            if (transferStatusFilter.value) filtered = filtered.filter(d => d.status === transferStatusFilter.value);
-            if (transferBdFilter.value) filtered = filtered.filter(d => d.bd === transferBdFilter.value);
-            if (transferSearch.value.trim()) {
-                const keyword = transferSearch.value.trim().toLowerCase();
-                filtered = filtered.filter(d => d.storeName.toLowerCase().includes(keyword));
-            }
-            renderTransferTable(filtered);
+            let f = [...transferData];
+            const rv = document.getElementById('transferRegionFilter').value;
+            const cv = document.getElementById('transferCityFilter').value;
+            const sv = document.getElementById('transferStatusFilter').value;
+            const bv = document.getElementById('transferBdFilter').value;
+            const sk = document.getElementById('transferSearch').value.trim().toLowerCase();
+            if (rv) f = f.filter(d => d.region === rv);
+            if (cv) f = f.filter(d => d.city === cv);
+            if (sv) f = f.filter(d => d.status === sv);
+            if (bv) f = f.filter(d => d.bd === bv);
+            if (sk) f = f.filter(d => d.storeName.toLowerCase().includes(sk));
+            renderTransferTable(f);
         }
+        ['transferRegionFilter','transferCityFilter','transferStatusFilter','transferBdFilter'].forEach(id => {
+            document.getElementById(id)?.addEventListener('change', applyTransferFilter);
+        });
+        document.getElementById('transferSearch')?.addEventListener('input', applyTransferFilter);
 
-        transferRegionFilter.addEventListener('change', applyTransferFilter);
-        transferCityFilter.addEventListener('change', applyTransferFilter);
-        transferStatusFilter.addEventListener('change', applyTransferFilter);
-        transferBdFilter.addEventListener('change', applyTransferFilter);
-        transferSearch.addEventListener('input', applyTransferFilter);
-
-        // 4. 下载按钮功能
-        document.getElementById('downloadTransferBtn').addEventListener('click', () => {
-            const headers = ['门店名称', '门店ID', '分级', '大区', '省区', '城市', '代理商家', '意向BD', '换签类型', '是否完成'];
-            const rows = transferData.map(d => [d.storeName, d.storeId, d.level, d.region, d.province, d.city, d.agent, d.bd, d.type, d.status]);
-            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `换签明细_${new Date().toISOString().slice(0, 10)}.csv`;
-            link.click();
+        // 下载按钮
+        document.getElementById('downloadTransferBtn')?.addEventListener('click', () => {
+            const h = ['门店名称','门店ID','分级','大区','省区','城市','代理商家','意向BD','换签类型','是否完成'];
+            const r = transferData.map(d => [d.storeName,d.storeId,d.level,d.region,d.province,d.city,d.agent,d.bd,d.type,d.status]);
+            const csv = '\uFEFF' + [h.join(','), ...r.map(x=>x.join(','))].join('\n');
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+            a.download = `换签明细_${new Date().toISOString().slice(0,10)}.csv`; a.click();
         });
 
-        // 顶部导航栏导出数据按钮
-        document.querySelector('.nav-cta').addEventListener('click', () => {
-            const headers = ['大区', '城市', '已签约', '门店总数', '签约率'];
-            const rows = cityData.map(d => [d.region, d.city, d.signed, d.total, d.rate.toFixed(1) + '%']);
-            const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `C2签约进度_${new Date().toISOString().slice(0, 10)}.csv`;
-            link.click();
+        // 顶部导航导出数据
+        document.querySelector('.nav-cta')?.addEventListener('click', () => {
+            const h = ['大区','城市','已签约','门店总数','签约率'];
+            const r = cityData.map(d => [d.region,d.city,d.signed,d.total,d.rate.toFixed(1)+'%']);
+            const csv = '\uFEFF' + [h.join(','), ...r.map(x=>x.join(','))].join('\n');
+            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+            a.download = `C2签约进度_${new Date().toISOString().slice(0,10)}.csv`; a.click();
         });
+
+        // 响应式resize
+        window.addEventListener('resize', () => dimensionChart.resize());
     </script>
 </body>
 </html>
