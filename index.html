@@ -228,6 +228,19 @@
 
 <!-- ===== Tab 1: Overview (原有内容) ===== -->
 <div class="tab-panel active" id="tabOverview">
+    <!-- ★ 整体进度概览（置顶）★ -->
+    <div class="panel" style="margin-bottom:22px;">
+        <h2 class="section-title">整体进度概览</h2>
+        <div class="summary-bar" id="summaryBar"></div>
+        <div style="margin-top:10px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-size:11px;color:var(--gray-600);font-weight:600;">总进度</span>
+                <span style="font-size:11px;color:var(--gray-600);font-weight:600;" id="progressDetail"></span>
+            </div>
+            <div class="progress-bar-bg" style="height:12px;border-radius:6px;"><div class="progress-bar-fill" id="progressFill" style="width:0%;height:100%;background:linear-gradient(90deg,#10B981,#34D399);border-radius:6px;transition:width .8s ease;"></div></div>
+        </div>
+    </div>
+
     <div class="content-row">
         <div class="panel">
             <h2 class="section-title">城市换签进度明细</h2>
@@ -246,17 +259,6 @@
         <div class="panel">
             <h2 class="section-title">近 14 日每日完成趋势</h2>
             <div class="chart-container"><canvas id="trendChart"></canvas></div>
-        </div>
-    </div>
-    <div class="panel" style="margin-bottom:22px;">
-        <h2 class="section-title">整体进度概览</h2>
-        <div class="summary-bar" id="summaryBar"></div>
-        <div style="margin-top:10px;">
-            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-                <span style="font-size:11px;color:var(--gray-600);font-weight:600;">总进度</span>
-                <span style="font-size:11px;color:var(--gray-600);font-weight:600;" id="progressDetail"></span>
-            </div>
-            <div class="progress-bar-bg" style="height:12px;border-radius:6px;"><div class="progress-bar-fill" id="progressFill" style="width:0%;height:100%;background:linear-gradient(90deg,#10B981,#34D399);border-radius:6px;transition:width .8s ease;"></div></div>
         </div>
     </div>
 </div>
