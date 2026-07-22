@@ -9,17 +9,14 @@
       ║  团购 C2 费率换签看板 v2.0 — BI 自动数据集成版            ║
       ╠══════════════════════════════════════════════════════════════╣
       ║  数据来源：BI 报表 #224424（门店明细图表）                ║
-      ║  更新方式：通过 mtbi CLI 自动拉取（每日可定时更新）       ║
-      ║  数据文件：stores.csv（与本 HTML 同目录）                  ║
+      ║  更新方式：GitHub Actions 每日自动拉取（北京时间 8:00）   ║
+      ║  数据文件：stores.csv（与 HTML 同目录，自动加载）         ║
       ║                                                            ║
       ║  使用方式：                                                 ║
-      ║  1. 确保 stores.csv 在本 HTML 同目录下                     ║
-      ║  2. 通过本地 HTTP 服务器打开（推荐）：                    ║
-      ║     python -m http.server 8080                              ║
-      ║     然后访问 http://localhost:8080/user_uploaded_dashboard.html ║
-      ║  3. 或直接浏览器打开 file:// 路径（部分浏览器限制）        ║
-      ║  4. 点击「刷新」按钮或上传新 CSV 可手动更新数据          ║
-      ║  5. 若无 CSV 文件则自动使用内置示例数据                   ║
+      ║  1. 打开本页面即可查看最新数据                             ║
+      ║  2. 切换「城市概览」/「门店明细」Tab 查看不同维度       ║
+      ║  3. 用筛选器按区域/城市/BD/状态过滤数据                  ║
+      ║  4. 数据每日自动更新，无需手动操作                         ║
       ╚══════════════════════════════════════════════════════════════╝
       
       📅 最后数据更新：2026-07-22 10:35 (BI #224424 自动拉取)
@@ -263,17 +260,8 @@
     </div>
 </div>
 
-<!-- ===== Tab 2: 门店明细表（新增） ===== -->
+<!-- ===== Tab 2: 门店明细表 ===== -->
 <div class="tab-panel" id="tabStores">
-
-    <!-- CSV 文件拖放上传区域 -->
-    <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvFileInput').click()">
-        <div class="drop-zone-text">
-            📂 <strong>点击上传</strong> 或拖拽 CSV 文件到此处<br>
-            <span style="font-size:11px;color:var(--gray-400);">支持从 BI 导出的门店明细 CSV，上传后立即刷新数据</span>
-        </div>
-        <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
-    </div>
 
     <!-- 门店筛选器（三级联动：大区→区域→城市） -->
     <div class="filter-bar" id="storeFilterBar">
