@@ -1,0 +1,71 @@
+name: Daily BI Data Update
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Fetch from BI
+        env:
+          MTBI_COOKIE: ${{ secrets.MTBI_COOKIE }}
+        run: |
+          echo "Start: $(date)"
+          R=$(curl -s -X POST 'https://bi.sankuai.com/api/cli/paas/dashboard/224424/data/submit' -H 'Content-Type: application/json' -H "Cookie: ${MTBI_COOKIE}" -d '{"component":["chart-jmjda-51635"]}')
+          SID=$(echo "$R" | python3 -c "import sys,json;d=json.load(sys.stdin);t=d.get('data',{}).get('tasks',[]);print(t[0].get('submitId','') if t else '')" 2>/dev/null)
+          [ -z "$SID" ] && echo "ERROR: no submitId" && exit 1
+          echo "submitId=$SID" >> $GITHUB_ENV
+      - name: Poll for result
+        env:
+          MTBI_COOKIE: ${{ secrets.MTBI_COOKIE }}
+        run: |
+          S="${bi_submit_id}"; E=0
+          while [ $E -lt 60 ]; do
+            ST=$(curl -s "https://bi.sankuai.com/api/cli/paas/dashboard/224424/data/status?submitId=$S" -H "Cookie: ${MTBI_COOKIE}" | python3 -c "import sys,json;d=json.load(sys.stdin);t=d.get('data',{}).get('tasks',[]);print(t[0].get('status','') if t else '')" 2>/dev/null)
+            echo "[$E] $ST"
+            [ "$ST" = "SUCCESS" ] || [ "$ST" = "SUCCEED" ] && break
+            [ "$ST" = "FAILED" ] || [ "$ST" = "ERROR" ] && exit 1
+            sleep 5; E=$((E+1))
+          done
+          [ $E -ge 60 ] && exit 1
+      - name: Convert to CSV
+        env:
+          MTBI_COOKIE: ${{ secrets.MTBI_COOKIE }}
+        run: |
+          R=$(curl -s "https://bi.sankuai.com/api/cli/paas/dashboard/224424/data/result?submitId=${bi_submit_id}" -H "Cookie: ${MTBI_COOKIE}")
+          python3 << 'EOF'
+import json,csv,os,re
+from datetime import datetime
+d=json.loads(os.environ.get('R','')) or {}
+rows=[]
+for t in d.get('data',{}).get('tasks',[]):
+ r=t.get('result',{}).get('data',{})
+ if isinstance(r,dict): rows.extend(r.get('rows',[]))
+ elif isinstance(r,list): rows.extend(r)
+H=['到餐客户ID','门店ID','门店名称','门店分层','大区','区域','代理城市','签约私海BD','c2是否签约','外卖客户ID','BD是否有搜索权限','平台客户ID']
+def e(v):
+ if v is None or v=='NULL': return ''
+ s=str(v)
+ return '"%s"'%s.replace('"','""') if any(c in s for c in'",\n') else s
+out=[[e(item.get('row',item).get(h,'') if isinstance(item,dict) else '') for h in H] for item in rows if isinstance(item,dict)]
+with open('stores.csv','w',newline='',encoding='utf-8-sig') as f:
+ w=csv.writer(f);w.writerow(H);w.writerows(out)
+n=datetime.now().strftime('%Y-%m-%d %H:%M')
+with open('index.html','r',enc='utf-8') as f:h=f.read()
+with open('index.html','w',enc='utf-8') as f:f.write(re.sub(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}',n,h,2))
+print("CSV:%d records"%len(out))
+EOF
+      - name: Verify & Push
+        run: |
+          ls -lh stores.csv index.html
+          git config user.name "bot" && git config user.email "bot@users.noreply.github.com"
+          git add stores.csv index.html
+          git diff --cached --quiet || git commit -m "auto:$(date '+%Y-%m-%d')" && git push origin main
